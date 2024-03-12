@@ -1,4 +1,7 @@
 const form = document.getElementById("form")
+if (localStorage.getItem("tasks") == null) {
+    localStorage.setItem("tasks", JSON.stringify([]))
+}
 let tasks = JSON.parse(localStorage.getItem("tasks"))
 
 form.addEventListener("submit", (ev) => {
@@ -12,7 +15,6 @@ form.addEventListener("submit", (ev) => {
 function updateList() {
     let ul = document.getElementById("ul-tasks")
 
-
     ul.innerText = ""
     tasks.forEach((task) => {
         let li = createCompleteLi(task)
@@ -21,32 +23,31 @@ function updateList() {
 
     updateLocalStorage()
 
-    if (ul.innerText == ""){
-        ul.style.border = 'none'
+    if (ul.innerText == "") {
+        ul.style.border = "none"
     } else {
-        ul.style.border = '3px solid var(--purple)'
+        ul.style.border = "3px solid var(--purple)"
     }
 }
 
 function editParagraph(ev) {
     let key = ev.currentTarget.dataset.key
-    console.log(key)
     let p = document.querySelector(`p[data-key="${key}"]`)
     p.contentEditable = true
     p.focus()
-    let range = document.createRange();
-    range.selectNodeContents(p);
-    range.collapse(false); 
-    let selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+    let range = document.createRange()
+    range.selectNodeContents(p)
+    range.collapse(false)
+    let selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
 
     p.addEventListener("blur", editText)
 }
 
 function editText(ev) {
-    tasks.forEach(task => {
-        if(task.key == ev.currentTarget.dataset.key){
+    tasks.forEach((task) => {
+        if (task.key == ev.currentTarget.dataset.key) {
             task.text = ev.currentTarget.innerText
         }
     })
@@ -58,26 +59,12 @@ function concludeTask(ev) {
     let key = ev.currentTarget.dataset.key
 
     tasks = tasks.filter((task) => task.key != key)
-    console.log(tasks)
     updateList()
 }
 
-function updateLocalStorage(){
-    localStorage.setItem( 'tasks', JSON.stringify(tasks))
+function updateLocalStorage() {
+    localStorage.setItem("tasks", JSON.stringify(tasks))
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function createCompleteLi(task) {
     let paragraph = document.createElement("p")
